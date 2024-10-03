@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MQTT Topic Viewer</title>
+</head>
+<body>
+    <h1>MQTT Topic Viewer</h1>
+    <label for="broker">Broker URL:</label>
+    <input type="text" id="broker" placeholder="ws://broker.hivemq.com:8000/mqtt">
+    
+    <label for="topic">Topic:</label>
+    <input type="text" id="topic" placeholder="example/topic">
+    
+    <button onclick="connect()">Connect</button>
+    
+    <h2>Topic Value: <span id="message">N/A</span></h2>
+    
+    <script src="mqtt.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
