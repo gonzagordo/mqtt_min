@@ -3,22 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MQTT Topic Viewer</title>
+    <title>WebSocket Demo</title>
 </head>
 <body>
-    <h1>MQTT Topic Viewer</h1>
-    <label for="broker">Broker URL:</label>
-    <input type="text" id="broker" placeholder="ws://broker.hivemq.com:8000/mqtt">
-    
-    <label for="topic">Topic:</label>
-    <input type="text" id="topic" placeholder="example/topic">
-    
-    <button onclick="connect()">Connect</button>
-    
-    <h2>Topic Value: <span id="message">N/A</span></h2>
-    
-    <!-- Cargar correctamente MQTT.js desde el CDN -->
-    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
-    <script src="app.js"></script>
+    <h1>WebSocket Demo con ESP32</h1>
+    <div id="status">Estado: Desconectando...</div>
+    <div id="messages"></div>
+    <button onclick="sendMessage()">Enviar Mensaje</button>
+
+    <script>
+        // Cambia a la dirección del proxy inverso
+        const wsUrl = "wss://192.168.1.43/ws/";
+        const statusDiv = document.getElementById("status");
+        const messagesDiv = document.getElementById("messages");
+
+        // Crear la conexión WebSocket
+        const socket = new WebSocket(wsUrl);
+
+        // Evento cuando se abre la conexión
+        socket.onopen = () => {
+            statusDiv.innerText = "Estado: Conectado";
+            console.log("Conectado al WebSocket del ESP32");
+        };
+
+        // Evento cuando se recibe un mensaje
+        socket.onmessage = (event) => {
+            const message = event.data;
+            messagesDiv.innerHTML += `<p>Mensaje recibido: ${message}</p>`;
+            console.log("Mensaje recibido:", message);
+        };
+
+        // Evento cuando se cierra la conexión
+        socket.onclose = () => {
+            statusDiv.innerText = "Estado: Desconectado";
+            console.log("Conexión WebSocket cerrada");
+        };
+
+        // Evento para manejar errores
+        socket.onerror = (error) => {
+            statusDiv.innerText = "Estado: Error";
+            console.error("Error en WebSocket:", error);
+        };
+
+        // Función para enviar un mensaje al ESP32
+        function sendMessage() {
+            const message = "Hola desde la PWA";
+            socket.send(message);
+            messagesDiv.innerHTML += `<p>Mensaje enviado: ${message}</p>`;
+            console.log("Mensaje enviado:", message);
+        }
+    </script>
 </body>
 </html>
